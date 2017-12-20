@@ -1,9 +1,9 @@
 Description:
-  Visualize GTFS-realtime vehicle position data.
+  web sem project
   
 Usage:
-  java -jar demo.jar --vehiclePositionsUrl=url
+  java -jar *.jar --vehiclePositionsUrl=http://developer.mbta.com/lib/GTRTFS/Alerts/VehiclePositions.pb
 
 Args:
-  --vehiclePositionsUrl=url           GTFS-realtime vehicle positions url
+  --vehiclePositionsUrl=url           vehicle positions url
   
