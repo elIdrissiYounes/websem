@@ -1,26 +1,9 @@
-/*
- * Copyright (C) 2012 Brian Ferris <bdferris@onebusaway.org>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 function Init() {
   
   var hostandport = window.location.hostname + ':' + window.location.port;
 
-	/**
-	 * Create a custom-styled Google Map with no labels and custom color scheme.
-	 */
+	
 	var CreateMap = function() {
 		var map_style = [ {
 			elementType : "labels",
@@ -45,8 +28,8 @@ function Init() {
 	var map = CreateMap();
 
 	/**
-	 * We want to assign a random color to each bus in our visualization. We
-	 * pick from the HSV color-space since it gives more natural colors.
+	 *
+	 * random colors
 	 */
 	var HsvToRgb = function(h, s, v) {
 		h_int = parseInt(h * 6);
@@ -191,6 +174,7 @@ function Init() {
 		};
 		setTimeout(applyUpdates, 1);	
 	};
+	
 
 	/**
 	 * We create a WebSocket to listen for vehicle position updates from our
@@ -204,6 +188,8 @@ function Init() {
 		ws.onmessage = function(e) {
 			console.log("Got WebSockets message");
 			ProcessVehicleData(e.data);
+	
+    
 		}
 		ws.onclose = function() {
 			console.log("WebSockets connection closed");

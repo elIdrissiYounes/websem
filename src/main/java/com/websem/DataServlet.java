@@ -135,7 +135,7 @@ public class DataServlet extends WebSocketServlet implements VehicleListener {
 
   class DataWebSocket implements WebSocket {
 
-    private Connection _connection,conne;
+    private Connection _connection;
 
     @Override
     public void onOpen(Connection connection) {

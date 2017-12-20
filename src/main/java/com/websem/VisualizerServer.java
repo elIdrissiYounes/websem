@@ -54,6 +54,9 @@ public class VisualizerServer {
 
     ResourceHandler resourceHandler = new ResourceHandler();
     resourceHandler.setWelcomeFiles(new String[] {"index.html"});
+    
+    
+     
     resourceHandler.setBaseResource(Resource.newClassPathResource("com/websem"));
 
     ServletHandler servletHandler = new ServletHandler();
@@ -62,7 +65,6 @@ public class VisualizerServer {
 
     HandlerList handlers = new HandlerList();
     handlers.setHandlers(new Handler[] {resourceHandler, servletHandler});
-
     _server.setHandler(handlers);
 
     _server.start();
