@@ -1,9 +1,7 @@
-
 function Init() {
-  
-  var hostandport = window.location.hostname + ':' + window.location.port;
 
-	
+	var hostandport = window.location.hostname + ':' + window.location.port;
+
 	var CreateMap = function() {
 		var map_style = [ {
 			elementType : "labels",
@@ -24,7 +22,7 @@ function Init() {
 		};
 		return new google.maps.Map(map_canvas, myOptions);
 	};
-	
+
 	var map = CreateMap();
 
 	/**
@@ -55,7 +53,7 @@ function Init() {
 
 	var HsvToRgbString = function(h, s, v) {
 		var rgb = HsvToRgb(h, s, v);
-		for ( var i = 0; i < rgb.length; ++i) {
+		for (var i = 0; i < rgb.length; ++i) {
 			rgb[i] = parseInt(rgb[i] * 256)
 		}
 		return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
@@ -69,9 +67,8 @@ function Init() {
 		return HsvToRgbString(h, 0.90, 0.90)
 	};
 
-	var icon = new google.maps.MarkerImage(
-			'http://' + hostandport + '/whitecircle8.png', null, null,
-			new google.maps.Point(4, 4));
+	var icon = new google.maps.MarkerImage('http://' + hostandport
+			+ '/whitecircle8.png', null, null, new google.maps.Point(4, 4));
 
 	var CreateVehicle = function(v_data) {
 		var point = new google.maps.LatLng(v_data.lat, v_data.lon);
@@ -112,8 +109,9 @@ function Init() {
 			var index = path.getLength() - 1;
 			path.setAt(index, point);
 		};
-	};
-	
+	}
+	;
+
 	var vehicles_by_id = {};
 	var animation_steps = 20;
 
@@ -136,29 +134,31 @@ function Init() {
 		var lon_delta = (v_data.lon - last.lng()) / animation_steps;
 
 		if (lat_delta != 0 && lon_delta != 0) {
-			for ( var i = 0; i < animation_steps; ++i) {
+			for (var i = 0; i < animation_steps; ++i) {
 				var lat = last.lat() + lat_delta * (i + 1);
 				var lon = last.lng() + lon_delta * (i + 1);
 				var op = CreateVehicleUpdateOperation(vehicle, lat, lon);
 				updates[i].push(op);
 			}
 		}
-	};
-	
+	}
+	;
+
 	var first_update = true;
-	
+
 	var ProcessVehicleData = function(data) {
+		delete data.messageid;
 		var vehicles = jQuery.parseJSON(data);
 		var updates = [];
 		var bounds = new google.maps.LatLngBounds();
-		for ( var i = 0; i < animation_steps; ++i) {
+		for (var i = 0; i < animation_steps; ++i) {
 			updates.push(new Array());
 		}
 		jQuery.each(vehicles, function() {
 			UpdateVehicle(this, updates);
 			bounds.extend(new google.maps.LatLng(this.lat, this.lon));
 		});
-		if (first_update && ! bounds.isEmpty()) {
+		if (first_update && !bounds.isEmpty()) {
 			map.fitBounds(bounds);
 			first_update = false;
 		}
@@ -167,19 +167,32 @@ function Init() {
 				return;
 			}
 			var fs = updates.shift();
-			for ( var i = 0; i < fs.length; i++) {
+			for (var i = 0; i < fs.length; i++) {
 				fs[i]();
 			}
 			setTimeout(applyUpdates, 1);
 		};
-		setTimeout(applyUpdates, 1);	
+		setTimeout(applyUpdates, 1);
 	};
-	
 
 	/**
 	 * We create a WebSocket to listen for vehicle position updates from our
 	 * webserver.
 	 */
+	var Process = function(txt) {
+		
+		var vehicles = jQuery.parseJSON(txt);
+		var res = '';
+	    for(var i = 0; i<vehicles.length; i++){
+	        res = res + '<p>' + vehicles[i] +'</p>';
+	        $('#msg').append(res);
+	    }
+	    
+
+	    
+		
+		
+	};
 	if ("WebSocket" in window) {
 		var ws = new WebSocket("ws://" + hostandport + "/data.json");
 		ws.onopen = function() {
@@ -187,9 +200,14 @@ function Init() {
 		}
 		ws.onmessage = function(e) {
 			console.log("Got WebSockets message");
-			ProcessVehicleData(e.data);
-	
-    
+			var d = e.data;
+			if (d.messageid == 1) {
+				Process(d);
+			} else {
+
+				ProcessVehicleData(e.data);
+
+			}
 		}
 		ws.onclose = function() {
 			console.log("WebSockets connection closed");

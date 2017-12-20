@@ -96,6 +96,7 @@ public class DataServlet extends WebSocketServlet implements VehicleListener {
       JSONArray array = new JSONArray();
       for (Vehicle vehicle : vehicles) {
         JSONObject obj = new JSONObject();
+        obj.put("messageid",2);
         obj.put("id", vehicle.getId());
         obj.put("lat", vehicle.getLat());
         obj.put("lon", vehicle.getLon());
@@ -119,6 +120,7 @@ public class DataServlet extends WebSocketServlet implements VehicleListener {
          Property  predicate = stmt.getPredicate();   // get the predicate
          RDFNode   object    = stmt.getObject();      // get the object
          JSONObject obj = new JSONObject();
+         	obj.put("messageid",1);
 	        obj.put("id", subject);
 	        obj.put("lat", subject.getProperty(lat).getDouble());
 	        obj.put("lon", subject.getProperty(lon).getDouble());
